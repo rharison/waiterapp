@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose';
 
-export const Category = model('Order', new Schema({
+export const Order = model('Order', new Schema({
   table: {
     required: true,
     type: String,

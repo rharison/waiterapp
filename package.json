@@ -1,8 +1,0 @@
-{
-  "name": "waiterapp",
-  "version": "1.0.0",
-  "main": "index.js",
-  "repository": "git@github.com:rharison/waiterapp.git",
-  "author": "@rharison <rharison.abreu@gmail.com>",
-  "license": "MIT"
-}

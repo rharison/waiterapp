@@ -5,7 +5,7 @@ export const Order = model('Order', new Schema({
     required: true,
     type: String,
   },
-  statun: {
+  status: {
     required: true,
     type: String,
     enum: ['WAITING', 'IN_PRODUCTION', 'DONE'],

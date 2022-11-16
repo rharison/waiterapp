@@ -44,7 +44,7 @@ export function Orders() {
       <Board>
         <header>
           <span>🕛</span>
-          <strong>Fila de espera</strong>
+          <strong>Fila de esper</strong>
           <span>(1)</span>
         </header>
 

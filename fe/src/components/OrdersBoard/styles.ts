@@ -7,9 +7,10 @@ export const Board = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+  justify-content: center;
   flex: 1;
 
-  header {
+  > header {
     padding: 8px;
     font-size: 14px;
     display: flex;
@@ -23,6 +24,7 @@ export const OrdersContainer = styled.div`
   flex-direction: column;
   width: 100%;
   margin-top: 24px;
+
 
   button {
     background: #fff;

@@ -6,13 +6,15 @@ import { Category as CategoryType } from '../../types/Category';
 
 interface CategoriesProps {
   categories: CategoryType[];
+  onSelectCategory: (categoryId: string) => Promise<void>;
 }
 
-export function Categories({ categories }: CategoriesProps) {
+export function Categories({ categories, onSelectCategory }: CategoriesProps) {
   const [selectedCategory, setSelectedCategory] = useState('');
 
   function handleSelectCategory(categoryId: string) {
     const category = selectedCategory === categoryId ? '' : categoryId;
+    onSelectCategory(category);
     setSelectedCategory(category);
   }
 

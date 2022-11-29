@@ -11,6 +11,8 @@ import { changeOrderStatus } from './app/useCases/orders/changeOrderStatus';
 import { cancelOrder } from './app/useCases/orders/cancelOrder';
 
 import { upload } from './app/middlewares/upload';
+import { login } from './app/useCases/user/login';
+import { validateToken } from './app/useCases/user/validateToken';
 
 export const router = Router();
 
@@ -31,5 +33,9 @@ router.post('/orders', createOrder);
 router.patch('/orders/:orderId', changeOrderStatus);
 
 router.delete('/orders/:orderId', cancelOrder);
+
+router.post('/login', login);
+
+router.post('/token', validateToken);
 
 

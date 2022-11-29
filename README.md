@@ -79,7 +79,7 @@ Objeto ingredients
 | `mesa`      | `string` | **Obrigatório**. Identificação da mesa |
 | `products`      | `Array<object>` | **Obrigatório**. Produtos do pedido |
 
-* Objeto products
+Objeto products
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
 | `product`      | `string` | **Obrigatório**. Id do produto |

@@ -7,13 +7,11 @@ export async function login(req: Request, res: Response) {
       email,
       password,
     } = req.body;
-    console.log('oi JAMEL');
+
     const { data , error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-
-    console.log('OIOIOIOIOIOIO');
 
     if (error) {
       return res.status(400).json({

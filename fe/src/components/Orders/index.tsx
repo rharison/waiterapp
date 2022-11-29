@@ -4,9 +4,11 @@ import { OrdersBoard } from '../OrdersBoard';
 import { Order } from '../../types/Order';
 import { useEffect, useState } from 'react';
 import { api } from '../../utils/api';
+import { Loading } from '../Loading';
 
 export function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const socket = socketIo('http://localhost:3001', {
@@ -19,8 +21,11 @@ export function Orders() {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     api.get('/orders').then(({ data }) => {
       setOrders(data);
+    }).finally(() => {
+      setLoading(false);
     });
   }, []);
 
@@ -39,6 +44,10 @@ export function Orders() {
         : order
     )));
 
+  }
+
+  if(loading){
+    return <Loading />;
   }
 
   return (

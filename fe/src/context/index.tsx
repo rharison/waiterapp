@@ -1,87 +1,67 @@
-import { createContext, useContext, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect } from 'react';
 import { api } from '../utils/api';
-const AuthContext = createContext({
-  isAuthenticated: false,
-  login: (payload: any) => {},
-  isAuthUser: (token: string) => {},
-});
 
-interface AuthProviderProps {
-  children: React.ReactNode;
+export const AuthContext = React.createContext({} as AuthContextProps);
+
+interface AuthContextProps {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+  login: (payload: PayloadProps) => Promise<boolean>;
 }
-
 interface PayloadProps {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
+interface AuthProps {
+  children: JSX.Element;
+}
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  const navigate = useNavigate();
-
+async function checkIsAuthenticated() {
   const token = localStorage.getItem('token');
-
   if(!token){
-    return setIsAuthenticated(false);
+    return false;
   }
+  const response = await api.post('/token', { token });
+  return response.status === 200;
+}
 
-  api.post('/token', { token })
-    .then(response => setIsAuthenticated(!!response.data))
-    .catch(() => setIsAuthenticated(false));
+async function authLogin(payload: PayloadProps) {
+  const response = await api.post('/login', payload);
+  if(response.status === 200){
+    localStorage.setItem('token', response.data.token);
+  }
+  return response.status === 200;
+}
 
-  // call this function when you want to authenticate the user
-  const login = async (payload: PayloadProps) => {
-    api.post('/login', payload)
-      .then(response => {
-        const { token } = response.data;
-        localStorage.setItem('token', token);
-        setIsAuthenticated(true);
-        navigate('/orders');
-      })
-      .catch(error => {
-        if(error.code === 'ERR_NETWORK'){
-          return toast.error('Erro de conexão');
-        }
-        toast.error(error.response.data.message);
-      });
-  };
+export default function Auth({ children }: AuthProps) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  console.log('AuthContext', isAuthenticated);
+  useEffect(() => {
+    checkAuth();
+  }, []);
 
-  const isAuthUser = async (token: string) => {
-    api.post('/token', { token })
-      .then(response => {
-        setIsAuthenticated(!!response.data);
-        return response.status === 200;
-      })
-      .catch(() => {
-        setIsAuthenticated(false);
+  const checkAuth = () => checkIsAuthenticated()
+    .then((response) => setIsAuthenticated(response))
+    .catch(() => setIsAuthenticated(false))
+    .finally(() => setIsLoading(false));
 
-      });
-  };
-
-  // call this function to sign out logged in user
-
-
-  const value = useMemo(
-    () => ({
-      isAuthenticated,
-      login,
-      isAuthUser
-    }),
-    [isAuthenticated]
-  );
+  const login = (payload: PayloadProps) => authLogin(payload)
+    .then((response) => {
+      setIsAuthenticated(response);
+      return response;
+    })
+    .catch(() => {
+      setIsAuthenticated(false);
+      return false;
+    })
+    .finally(() => setIsLoading(false));
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{ isAuthenticated, isLoading, login }}>
       {children}
     </AuthContext.Provider>
   );
-};
+}
 
-
-export const useAuth = () => {
-  return useContext(AuthContext);
-};

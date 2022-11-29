@@ -1,20 +1,30 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Container, Content } from './styles';
-import { useAuth } from '../../context';
+import { AuthContext } from '../../context';
+import { Loading } from '../Loading';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+
 
 export function Login(){
+  const { login, isAuthenticated, isLoading } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  function handleSubmit(event: React.FormEvent){
+  async function handleSubmit(event: React.FormEvent){
     event.preventDefault();
     const payload = {
       email,
       password
     };
 
-    login(payload);
+    const response = await login(payload);
+
+    if(isAuthenticated || response){
+      return navigate('/orders');
+    }
+    toast('Usuário ou senha inválidos');
   }
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -26,6 +36,14 @@ export function Login(){
     if(name === 'password'){
       setPassword(value);
     }
+  }
+
+  if(isLoading){
+    return <Loading />;
+  }
+
+  if(isAuthenticated){
+    return  <Navigate to={'/orders'} />;
   }
 
   return (

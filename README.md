@@ -62,7 +62,7 @@ Este projeto consiste em um aplicativo para auxiliar o controle de pedidos de um
 | `category`      | `string` | **Obrigatório**. Id da categoria |
 | `image`      | `blob` | **Obrigatório**. Imagem do produto |
 
-* Objeto ingredients
+Objeto ingredients
 | Parâmetro   | Tipo       | Descrição                                   |
 | :---------- | :--------- | :------------------------------------------ |
 | `name`      | `string` | **Obrigatório**. Nome do ingrediente |
